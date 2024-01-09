@@ -30,6 +30,26 @@ document.querySelector('#num-9').addEventListener('click', onClickNumber);
 //이벤트 객체를 이용해 코드 중복을 제거했다.
 
 const onClickOperator = (op) => () => {
+    if (numTwo) {
+        switch (operator) {
+            case '+':
+                $result.value = parseInt(numOne) + parseInt(numTwo);
+                break;
+            case '-':
+                $result.value = numOne - numTwo;
+                break;
+            case '*':
+                $result.value = numOne * numTwo;
+                break;
+            case '/':
+                $result.value = numOne / numTwo;
+                break;
+            default:
+                break;
+        }
+        numOne = $result.value;
+        numTwo = '';
+    }
     if (numOne) {
         operator = op;
         $operator.value = op;
@@ -59,11 +79,16 @@ document.querySelector('#calculate').addEventListener('click', () => {
                 break;
             default:
                 break;
-            }
+        }
+        $operator.value = '';
+        numOne = '';
+        operator = '';
+        numTwo = '';
     } else {
         alert('숫자를 먼저 입력하세요.');
     }
 });
+
 document.querySelector('#clear').addEventListener('click', () => {
     numOne = '';
     operator = '';
