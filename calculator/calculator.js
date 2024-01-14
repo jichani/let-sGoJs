@@ -59,15 +59,9 @@ const onClickOperator = (op) => () => {
 };
 
 document.querySelector("#plus").addEventListener("click", onClickOperator("+"));
-document
-  .querySelector("#minus")
-  .addEventListener("click", onClickOperator("-"));
-document
-  .querySelector("#divide")
-  .addEventListener("click", onClickOperator("/"));
-document
-  .querySelector("#multiply")
-  .addEventListener("click", onClickOperator("*"));
+document.querySelector("#minus").addEventListener("click", onClickOperator("-"));
+document.querySelector("#divide").addEventListener("click", onClickOperator("/"));
+document.querySelector("#multiply").addEventListener("click", onClickOperator("*"));
 document.querySelector("#calculate").addEventListener("click", () => {
   if (numTwo) {
     switch (operator) {
@@ -103,3 +97,6 @@ document.querySelector("#clear").addEventListener("click", () => {
   $result.value = ""; //이건 화면만 초기화
   //초기상태가 뭔지 알기 위해서는 초기상태 (let으로 선언한 변수)들을 한군데 몰아넣는게 좋다.
 });
+
+// 셀프 체크 :
+// 연속으로 계산이 되게 구현 (완료)
