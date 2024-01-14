@@ -6,7 +6,20 @@ const $order = document.querySelector("#order");
 let word; // 제시어
 let newWord; // 새로 입력한 단어
 
+if (number === 0) {
+  $word.textContent = "사용자가 취소를 눌러 게임을 종료합니다.";
+}
+
 const onClickButton = () => {
+  if (number === 0) {
+    return;
+  }
+
+  if (newWord.length !== 3) {
+    alert("3글자를 입력해주세요!");
+    return;
+  }
+
   if (!word || word[word.length - 1] === newWord[0]) {
     word = newWord; // 입력한 단어가 제시어가 된다.
     $word.textContent = word; // word 태그 선택하고 textcontent를 word로 바꿔준다.
@@ -37,5 +50,5 @@ $input.addEventListener("keydown", function (e) {
 });
 
 // 셀프 체크 :
-// 입력할 수 있는 단어를 세 글자로 고정. 다만, 세 글자가 아니라면 다시 입력하라고 표시.
-// 또한 초반에 prompt를 입력할 때 몇 명이 참여할 지 선택할 때 취소를 누르면 다음 코드가 실행되지 않게 구현
+// 입력할 수 있는 단어를 세 글자로 고정. 다만, 세 글자가 아니라면 다시 입력하라고 표시. (완료)
+// 또한 초반에 prompt를 입력할 때 몇 명이 참여할 지 선택할 때 취소를 누르면 다음 코드가 실행되지 않게 구현 (완료)

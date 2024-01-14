@@ -56,13 +56,16 @@ $form.addEventListener("submit", (event) => {
     $logs.textContent = "홈런!";
     return;
   }
+
   if (tries.length >= 9) {
     defeated();
     return;
   }
+
   // 몇 스트라이크 몇 볼인지 검사
   let strike = 0;
   let ball = 0;
+
   for (let i = 0; i < answer.length; i++) {
     const index = value.indexOf(answer[i]);
     if (index > -1) {
@@ -76,20 +79,23 @@ $form.addEventListener("submit", (event) => {
       }
     }
   }
+
   if (strike === 0 && ball === 0) {
     out++;
-    $logs.append(`${value}: 아웃`, document.createElement("br"));
+    $logs.append(`${value}: ${out} 아웃`, document.createElement("br"));
   } else {
     $logs.append(`${value}: ${strike} 스트라이크 ${ball} 볼`, document.createElement("br"));
   }
+
   if (out === 3) {
     defeated();
     return;
   }
+
   tries.push(value);
 });
 
-// 셀프 체크 : 아웃을 당하면 몇번째 아웃인지를 표시
+// 셀프 체크 : 아웃을 당하면 몇번째 아웃인지를 표시 (완료)
 // 패배했을 때 게임이 끝나게 구현
 // 인풋창에 같은 숫자는 입력이 안되게 구현하기
 // 인풋창에 한글이 입력이 안되게 구현하기
