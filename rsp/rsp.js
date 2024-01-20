@@ -14,6 +14,7 @@ const rspX = {
 };
 
 let computerChoice = "scissors";
+
 const changeComputerHand = () => {
   if (computerChoice === "rock") {
     computerChoice = "scissors";
@@ -25,18 +26,59 @@ const changeComputerHand = () => {
   $computer.style.background = `url(${IMG_URL}) ${rspX[computerChoice]} 0`;
   $computer.style.backgroundSize = "auto 200px";
 };
+
 let intervalId = setInterval(changeComputerHand, 50);
+
+// 가위: 1,  바위: 0,   보: -1
+// 나\컴퓨터  가위    바위    보
+// 가위       0       1       2
+// 바위      -1       0       1
+// 보        -2      -1       0
+const scoreTable = {
+  rock: 0,
+  scissors: 1,
+  paper: -1,
+};
+
 // clickable은 플래그변수
 let clickable = true;
-const clickButton = () => {
+let score = 0;
+
+let computer = 0;
+let me = 0;
+
+const clickButton = (event) => {
   if (clickable) {
     clearInterval(intervalId);
     clickable = false;
-    // 점수 계산 및 화면 표시
-    setTimeout(() => {
-      clickable = true;
-      intervalId = setInterval(changeComputerHand, 50);
-    }, 1000);
+    const myChoice =
+      event.target.textContent === "바위" ? "rock" : event.target.textContent === "가위" ? "scissors" : "paper";
+    const myScore = scoreTable[myChoice];
+    const computerScore = scoreTable[computerChoice];
+    const diff = myScore - computerScore;
+
+    let message;
+    if ([2, -1].includes(diff)) {
+      me += 1;
+      message = "승리";
+    } else if ([-2, 1].includes(diff)) {
+      computer += 1;
+      message = "패배";
+    } else {
+      message = "무승부";
+    }
+    if (me >= 3) {
+      $score.textContent = `나의 승리 ${me}:${computer}`;
+    } else if (computer >= 3) {
+      $score.textContent = `컴퓨터의 승리 ${me}:${computer}`;
+    } else {
+      $score.textContent = `${message} ${me}:${computer}`;
+      // 점수 계산 및 화면 표시
+      setTimeout(() => {
+        clickable = true;
+        intervalId = setInterval(changeComputerHand, 50);
+      }, 1000);
+    }
   }
 };
 
@@ -58,3 +100,7 @@ $paper.addEventListener("click", clickButton);
 
 // const fun1 = fun(1);
 // fun1 === fun1 // true
+
+// if (diff === '고양이' || diff === '사자' || diff === '거북이') 이런 코드는 별로 안 와닿는다.
+// ['고양이', '사자', '거북이'].includes(diff) 하면 True / False 로 나온다.
+// ['고양이', '사자', '거북이'].indexOf(diff) 하면 Index / -1 로 나온다.
