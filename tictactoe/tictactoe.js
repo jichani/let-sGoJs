@@ -1,45 +1,103 @@
-// 최신 문법1. 구조분해할당. 객체안의 속성 이름과 변수 명이 같을 때 사용할 수 있다.
 const { body } = document;
 
-// 최신 문법2. 배열의 값을 변수에 저장하기
-const arr = [1, 2, 3, 4, 5];
-// const one = arr[0]; ~ const five = arr[4]; 와 같다
-// const [one, two, three, four, five] = arr;
-
-// 만약 3개만 사용하고 싶다면 콤마만 남겨둔다.
-// const [one,,, four, five] = arr;
-
 const $table = document.createElement("table");
-const $result = document.createElement("div"); // 결과창
-
+const $result = document.createElement("div");
 const rows = [];
 let turn = "O";
 
-for (let i = 0; i < 3; i++) {
+// [
+//   [td, td, td],
+//   [td, td, td],
+//   [td, td, td],
+// ]
+
+const checkWinner = (target) => {
+  const rowIndex = target.parentNode.rowIndex;
+  const cellIndex = target.cellIndex;
+
+  // 세 칸 다 채워졌나?
+  let hasWinner = false;
+  // 가로줄 검사
+  if (
+    rows[rowIndex][0].textContent === turn &&
+    rows[rowIndex][1].textContent === turn &&
+    rows[rowIndex][2].textContent === turn
+  ) {
+    hasWinner = true;
+  }
+  // 세로줄 검사
+  if (
+    rows[0][cellIndex].textContent === turn &&
+    rows[1][cellIndex].textContent === turn &&
+    rows[2][cellIndex].textContent === turn
+  ) {
+    hasWinner = true;
+  }
+  // 대각선 검사
+  if (rows[0][0].textContent === turn && rows[1][1].textContent === turn && rows[2][2].textContent === turn) {
+    hasWinner = true;
+  }
+  if (rows[0][2].textContent === turn && rows[1][1].textContent === turn && rows[2][0].textContent === turn) {
+    hasWinner = true;
+  }
+  return hasWinner;
+};
+
+const checkWinnerAndDraw = (target) => {
+  const hasWinner = checkWinner(target);
+  // 승자가 있으면
+  if (hasWinner) {
+    $result.textContent = `${turn}님이 승리!`;
+    $table.removeEventListener("click", callback);
+    return;
+  }
+  // 승자가 없으면
+  const draw = rows.flat().every((cell) => cell.textContent);
+  if (draw) {
+    $result.textContent = `무승부`;
+    return;
+  }
+  turn = turn === "X" ? "O" : "X";
+};
+
+let clickable = true;
+const callback = (event) => {
+  if (!clickable) {
+    return;
+  }
+  if (event.target.textContent !== "") {
+    // 칸이 이미 채워져 있는가?
+    console.log("빈칸이 아닙니다.");
+    return;
+  }
+  // 빈칸이면
+  console.log("빈칸입니다");
+  event.target.textContent = turn;
+  // 승부 판단하기
+  checkWinnerAndDraw(event.target);
+  if (turn === "X") {
+    const emptyCells = rows.flat().filter((v) => !v.textContent);
+    const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    clickable = false;
+    setTimeout(() => {
+      randomCell.textContent = "X";
+      checkWinnerAndDraw(randomCell);
+      clickable = true;
+    }, 1000);
+  }
+};
+
+for (let i = 1; i <= 3; i++) {
   const $tr = document.createElement("tr");
   const cells = [];
-  for (let j = 0; j < 3; j++) {
+  for (let j = 1; j <= 3; j++) {
     const $td = document.createElement("td");
     cells.push($td);
-    $td.addEventListener("click", (event) => {
-      console.log("clicked");
-
-      // 칸에 글자가 있나? 이벤트 리스너에서 조건에 안되면 리턴되게 하는 편이 편하다.
-      if (event.target.textContent) return;
-
-      event.target.textContent = turn;
-
-      // 승부 확인
-      if (turn === "O") {
-        turn = "X";
-      } else if (turn === "X") {
-        turn = "O";
-      }
-    });
     $tr.append($td);
   }
   rows.push(cells);
   $table.append($tr);
 }
+$table.addEventListener("click", callback);
 body.append($table);
 body.append($result);
